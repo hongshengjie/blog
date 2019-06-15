@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+service Blog {
+    // 首页
+    rpc Index(BlogIndexReq)returns (BlogIndexResp);
+
+    
+    // 文章详情页
+    rpc Article(BlogArticleReq)returns(BlogArticleResp);
+    // 文章列表页
+    rpc List(BlogListReq) returns( BlogListResp);
+    // 新增文章
+    rpc Add(BlogAddReq)returns(StatusResp);
+    // 删除文章
+    rpc Del(BlogDelReq)returns(StatusResp);
+    // 更新文章
+    rpc Update(BlogUpdateReq)returns (StatusResp);
+
+
+    // 登陆获取token,退出的时候把浏览器的token删除就好
+    rpc GetToken(BlogGetTokenReq)returns (BlogGetTokenResp);
+ }
+
+message BlogGetTokenReq{
+    string username = 1;
+    string password = 2;
+}
+
+message BlogGetTokenResp{
+    string token  = 1;
+}
+message BlogIndexReq{}
+
+message BlogIndexResp{
+    repeated BlogArticle  articles = 1;   //首页文章列表
+    map<int32,Category> cat = 2;
+}
+
+
+message BlogArticleReq{
+    string oid = 1;
+}
+message BlogArticleResp{
+    BlogArticle article = 1;
+    map<int32,Category> cat = 2;
+    
+}
+message Category {
+    int32 cid = 1;
+    int32 pcid = 2;
+    string name = 3;
+}
+message BlogListReq{
+    int32 offset = 1;
+    int32 size = 2;
+    OrderBy order = 3;
+}
+
+message BlogListResp{
+    repeated  BlogArticle list = 1;
+}
+
+message BlogAddReq {
+    BlogArticle article = 1;
+}
+
+message BlogUpdateReq {
+    string objectID    = 1;
+    string title       = 2;    
+	repeated string tags = 3 ;       
+    string headImage   = 4;
+    int32 readCount    = 5; 
+	int32 zanCount     = 6;
+	string contentMD   = 7;
+    string contentHTML = 8; 
+    int32 cid          = 9; 
+    int32 status      =10;
+}
+
+message BlogDelReq {
+    string objectID = 1;
+
+}
+message StatusResp {
+    int32 code = 1;
+    string message = 2;
+}
+
+
+
+
+enum OrderBy {
+    readCount = 0 ;
+    zanCount = 1;
+    ctime = 2;
+    mtime = 3;
+}
+message BlogArticle{
+    string objectID    = 1;
+    string title       = 2; 
+    int32 cid          = 3;   
+	repeated string tags = 4 ;       
+    string headImage   = 5;  
+	string authorName  = 6;
+	string authorFace  = 7;
+	int32 readCount    = 8; 
+	int32 zanCount     = 9;
+	string contentMD   = 10;
+	string contentHTML = 11;
+    int64 ctime        = 12;
+    int64 mtime        = 13;
+    int32 pcid         = 15;
+
+}
